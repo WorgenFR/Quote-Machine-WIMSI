@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        {% block stylesheets %}
+             {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body style="background-color: #e0e0e0">
+    <div class="row pt-2" style="border-bottom: solid 1px black; height: 45px; background-color: #5eb5e0">
+        <form method="GET" action="{{ path('quote_search') }}" class="col">
+            <div class="row">
+                <a class="col-3" href="{{ path('quote_index') }}" style="text-decoration: none; color: black; margin-left: 5%"><h4>Quote Machine</h4></a>
+                <input placeholder="Recherchez des mots clés..." name="name" id="inputQuote" class="h-25 rounded" style="border: none; margin-left: 2%; width: 20%">
+                <button  type="submit" class="btn bg-light btn-outline-success col-1 pt-0" style="margin-left: 1%; height: 25px; width: 42px; border: none">
+                    <i class="fas fa-search text-dark"></i>
+                </button>
+
+                <select id="catg-choice" style="width: 20%; border-radius: 5px; margin-left: 2%; margin-bottom: 1%; background-color: white; height: 25px" class="col-1">
+                    <option>Choisir une catégorie</option>
+                    {% for catg in categories %}
+                        <option value="../../quotes/category/{{ catg.id }}">{{ catg.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <select class="col-1 rounded bg-white" onChange="location = this.options[this.selectedIndex].value;" style="height: 70%; margin-left: 1%">
+                    <option>Actions</option>
+                    <option value="{{ path('quote_new') }}">Add quote</option>
+                    <option value="{{ path('categorie_new') }}">Add category</option>
+                </select>
+            </div>
+        </form>
+
+        {% if app.user %}
+            <a class="col-1" href="{{ path('profile') }}"><button class="btn bg-light btn-outline-primary p-0 text-dark" style=";width: 100px; height: 27px;">Profile</button></a>
+            <a class="col-1" href="{{ path('app_logout') }}"><button class="btn bg-light btn-outline-primary p-0 text-dark" style=";width: 100px; height: 27px;">Logout</button></a>
+        {% else %}
+            <a class="col-1" href="{{ path('register') }}"><button class="btn bg-light btn-outline-primary pt-0  text-dark" style="width: 100px; height: 27px">
+                    Register
+                </button></a>
+            <a class="col-1" href="{{ path('app_login') }}"><button class="btn bg-light btn-outline-primary pt-0  text-dark" style="width: 100px; height: 27px">
+                    Login
+                </button></a>
+        {% endif %}
+    </div>
+
+
+    <script>
+        $('#catg-choice').on('change', function(choice){
+           window.location.replace($('#catg-choice').val());
+        })
+    </script>
+
+    <div class="example-wrapper bg-light mt-0" style="min-height: 1200px; padding: 30px; font-family: 'DejaVu Sans', serif">
+        {% block body %}
+        {% endblock %}
+    </div>
+    </body>
+</html>

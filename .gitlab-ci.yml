@@ -1,0 +1,57 @@
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+
+stages:
+  - build
+  - code
+  - test
+
+install: # Installation des dépendances du projet
+  stage: build
+  script:
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress
+  tags:
+    - php8
+    - composer
+
+code-fixer: # Vérification du code PHP
+  stage: code
+  dependencies:
+    - install
+  script:
+    - vendor/bin/php-cs-fixer fix --diff --dry-run
+  tags:
+    - php8
+    - composer
+
+phpunit: # Chargement des fixtures et exécution des tests
+  stage: test
+  dependencies:
+    - install
+  script:
+    - php bin/phpunit
+  tags:
+    - php8
+    - composer
+
+lint:twig: # Vérification du Twig
+  stage: code
+  dependencies:
+    - install
+  script:
+    - bin/console lint:twig templates
+  tags:
+    - php8
+    - composer
+
+lint:yaml: # Vérification du YAML
+  stage: code
+  dependencies:
+    - install
+  script:
+    - bin/console lint:yaml config
+  tags:
+    - php8
+    - composer

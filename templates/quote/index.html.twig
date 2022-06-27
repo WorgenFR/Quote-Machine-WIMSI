@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello QuoteController!{% endblock %}
+
+{% block body %}
+
+<style>
+    .example-wrapper { margin: 1em auto; width: 1000px; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }S
+</style>
+
+    {{ component('newQuoteIndicator') }}
+
+    <div class="row">
+        <h1 class="text-center col-8" id="titre" style="margin-left: 10%">Bienvenue sur QuoteMachine !</h1>
+        <a class="col-2 mt-1" href="{{ path('quote_csv') }}"><button class="btn btn-success">Export CSV</button></a>
+    </div>
+    {% if categorie is defined %}
+        <h3>Citations de la catégorie : {{ categorie.name }}
+            <span style="font-size: 0.6em"><a style="margin-left: 1%" href="../../categorie/{{ categorie.id }}/edit">Modifier</a> | <a href="../../categorie/{{ categorie.id }}/delete">Supprimer</a></span></h3>
+        {% if categorie.imageFile != null or categorie.imageFile != '' %}
+            <img src="{{ categorie.imageFile }}">
+        {% endif %}
+    {% endif %}
+
+    <br/>
+
+    <div id="quoteBlock">
+        {#<div class="count">
+            {{ quotes.getTotalItemCount }}
+        </div>#}
+        <table>
+            {% for quote in quotes %}
+                {#{% if quote.category.imageFile %}
+                    {{ quote.category.imageFile }}
+                {% endif %}
+                #}
+                <tr>
+                <div class="row">
+                    <div  class="col-1">
+                        {#{% if quote in app.user.likes %} #}
+                        {% if (quote.likes | length) > 0 %}
+                            <button data-id="{{ quote.id }}" class="btn like-btn"><i class="fas fa-heart"></i></button><br/>
+                        {% else %}
+                            <button class="btn like-btn"><i class="far fa-heart"></i></button><br/>
+                        {% endif %}
+                            <span class="nbLike" id="{{ quote.id }}" style="margin-left: 28%">{{ quote.likes | length }}</span>
+                    </div>
+                        <div class="quote col">
+                    <p>{{ quote.content }}</p>
+                    <p class="text-secondary">{{ quote.meta }}
+                        {% if quote.category %}
+                            <a href="/quotes/category/1"><button class="btn text-primary badge btn-outline-primary p-1">{{ quote.category.name }}</button></a>
+                        {% endif %}
+                        {% if quote.author %}
+                            <span>{{ quote.author.name }}</span>
+                        {% endif %}
+                        {% if app.user and app.user.id == quote.author.id %}
+                            <a style="font-size: 0.8em; margin-left: 1%" href="./quotes/{{ quote.id }}/edit">Modifier</a> | <a style="font-size: 0.8em" href="./quotes/{{ quote.id }}/delete">Supprimer</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <br/>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="navigation rounded mx-auto" style="background-color: #E0E0E0; width: 10%;">
+            {{ knp_pagination_render(quotes) }}
+        </div>
+    </div>
+{% endblock %}

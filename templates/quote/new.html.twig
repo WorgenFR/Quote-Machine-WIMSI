@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello QuoteController!{% endblock %}
+
+{% block body %}
+
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+    <br/>
+
+{% if case == 'AJOUT' %}
+    <h3>Ajout d'une citation</h3><br/>
+    <form method="POST" action="./add">
+{% elseif case == 'EDIT' %}
+    <h3>Modification d'une citation</h3><br/>
+    <form method="POST" action="./modify/">
+{% endif %}
+
+        {% if case == 'AJOUT' or app.user and app.user.id == id %}
+        <label class="w-100">
+            Content :
+        <input name="content" class="w-75" placeholder="Texte de la citation" style="margin-left: 2.7%">
+        </label><br/><br/>
+
+        <label class="w-100">
+            Meta :
+            <input name="meta" class="w-75" style="margin-left: 6%" placeholder="Oeuvre dont provient la citation">
+        </label><br/><br/>
+
+        <label class="w-100">
+            Categorie :
+            <input name="catg" class="w-75" style="margin-left: 1%" placeholder="Numero de la catégorie">
+        </label><br/><br/>
+
+            <button class="btn btn-outline-primary" type="submit" name="submit-quote">Valider la saisie</button>
+        {% else %}
+            <h4 style="background-color: red; color: white" class="text-center">Vous n'avez pas le droit de modifier cette citation !</h4>
+        {% endif %}
+
+    </form>
+{% endblock %}
+
